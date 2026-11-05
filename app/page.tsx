@@ -1,0 +1,1 @@
+export default function Home(){return <main><h1>CryptoBridge MCP</h1><p>Servidor de homologação de cotações públicas do Mercado Bitcoin.</p><p>Endpoint MCP: <code>/api/mcp</code></p><p>Sem acesso a contas, sem chaves privadas e sem execução de negociações.</p></main>;}
