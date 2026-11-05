@@ -17,7 +17,7 @@ export class MercadoBitcoinAdapter implements ExchangeAdapter {
     } catch {
       throw new ProviderError('PROVIDER_UNAVAILABLE', 'Mercado Bitcoin ticker is temporarily unreachable.');
     }
-    if (!response.ok) throw new ProviderError('PROVIDER_HTTP_ERROR', 'Mercado Bitcoin returned an error for this ticker.');
+    if (!response.ok) throw new ProviderError('PROVIDER_HTTP_ERROR', 'Mercado Bitcoin ticker endpoint returned HTTP '+response.status+'.');
     let body: unknown;
     try { body = await response.json(); } catch { throw new ProviderError('INVALID_PROVIDER_RESPONSE', 'Invalid ticker JSON.'); }
     const row = Array.isArray(body) ? body.find((r: RemoteTicker) => r && r.pair === pair) as RemoteTicker | undefined : undefined;
