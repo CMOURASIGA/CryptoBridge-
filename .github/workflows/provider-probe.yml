@@ -1,0 +1,17 @@
+name: Mercado Bitcoin public API diagnostic
+on:
+  push:
+    branches: [develop]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  provider:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check public ticker availability without credentials
+        run: node tests/provider-probe.mjs
