@@ -28,7 +28,7 @@ async function run(){
  const p=JSON.parse(preview.content[0].text);
  assert.equal(p.executed,false);
  const ticker=await call('tools/call',{name:'get_ticker',arguments:{pair:'BTC-BRL'}});
- assert.equal(ticker.isError,true===ticker.isError?true:undefined,'Ticker provider did not return data: '+ticker.content?.[0]?.text);
+ if(ticker.isError) throw Error('Ticker failed: '+ticker.content?.[0]?.text);
  const t=JSON.parse(ticker.content[0].text);
  assert.equal(t.exchange,'mercado_bitcoin');assert.equal(t.pair,'BTC-BRL');assert.ok(t.fetchedAt);
  console.log(JSON.stringify({server:initialized.serverInfo,tools:names,ticker:{pair:t.pair,price:t.last,fetchedAt:t.fetchedAt},previewSafe:!p.executed},null,2));
