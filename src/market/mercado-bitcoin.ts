@@ -13,11 +13,17 @@ export class MercadoBitcoinAdapter implements ExchangeAdapter {
     url.searchParams.set('symbols', pair);
     let response: Response;
     try {
-      response = await this.transport(url.toString(), { method: 'GET', signal: AbortSignal.timeout(8000), headers: { Accept: 'application/json' } });
+      response = await this.transport(url.toString(), { method: 'GET', redirect: 'manual', signal: AbortSignal.timeout(8000), headers: { Accept: 'application/json' } });
     } catch {
       throw new ProviderError('PROVIDER_UNAVAILABLE', 'Mercado Bitcoin ticker is temporarily unreachable.');
     }
-    if (!response.ok) throw new ProviderError('PROVIDER_HTTP_ERROR', 'Mercado Bitcoin ticker endpoint returned HTTP '+response.status+'.');
+    if (response.status >= 300 && response.status < 400) {
+      throw new ProviderError('PROVIDER_REDIRECT', 'Mercado Bitcoin public ticker returned HTTP '+response.status+' instead of market data. Prices unavailable; contact provider if it persists.');
+    }
+    if (!response.ok) throw new ProviderError('PROVIDER_HTTP_ERROR', 'Mercado Bitcoin public ticker returned HTTP '+response.status+'. Prices unavailable.');
+    if (!response.headers.get('content-type')?.toLowerCase().includes('application/json')) {
+      throw new ProviderError('INVALID_PROVIDER_RESPONSE', 'Mercado Bitcoin returned non-JSON data. Prices unavailable.');
+    }
     let body: unknown;
     try { body = await response.json(); } catch { throw new ProviderError('INVALID_PROVIDER_RESPONSE', 'Invalid ticker JSON.'); }
     const row = Array.isArray(body) ? body.find((r: RemoteTicker) => r && r.pair === pair) as RemoteTicker | undefined : undefined;
