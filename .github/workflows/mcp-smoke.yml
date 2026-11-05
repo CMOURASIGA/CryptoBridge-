@@ -1,0 +1,19 @@
+name: MCP remote smoke
+on:
+  push:
+    branches: [develop]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify remote MCP and real public ticker
+        env:
+          MCP_URL: https://cryptobridge-mcp-git-develop-christians-projects-4954426e.vercel.app/api/mcp
+        run: node tests/remote-smoke.mjs
