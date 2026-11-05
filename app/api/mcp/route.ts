@@ -1,5 +1,5 @@
 import { createMcpHandler } from 'mcp-handler';
-import { registerPublicTools } from '../../../src/mcp-tools';
+import { registerPublicTools } from '../../../src/mcp-tools.js';
 
 export const runtime='nodejs';
 export const maxDuration=30;
