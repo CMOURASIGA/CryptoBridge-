@@ -3,6 +3,7 @@ import { serveStdio } from '@modelcontextprotocol/server/stdio';
 import * as z from 'zod/v4';
 import { MercadoBitcoinAdapter } from './market/mercado-bitcoin.js';
 import { ProviderError, privateAccessUnavailable, tradingUnavailable } from './domain.js';
+import { previewLimitOrder } from './order-preview.js';
 
 const market = new MercadoBitcoinAdapter();
 const output = (data:unknown) => ({ content:[{type:'text' as const,text:JSON.stringify(data)}] });
@@ -16,6 +17,7 @@ serveStdio(() => {
   server.registerTool('get_balances',{description:'Private account balances, unavailable until secure per-user authorization exists.',inputSchema:z.object({})},async()=>{try{privateAccessUnavailable();}catch(e){return fail(e);}});
   server.registerTool('get_portfolio',{description:'Private portfolio, unavailable until secure per-user authorization exists.',inputSchema:z.object({})},async()=>{try{privateAccessUnavailable();}catch(e){return fail(e);}});
   server.registerTool('get_orders',{description:'Private order history, unavailable until secure per-user authorization exists.',inputSchema:z.object({})},async()=>{try{privateAccessUnavailable();}catch(e){return fail(e);}});
+  server.registerTool('preview_limit_order',{description:'LOCAL HYPOTHETICAL limit order math only. This does NOT send an order, check account balance, or contact an exchange.',inputSchema:z.object({side:z.enum(['BUY','SELL']),pair:z.string().regex(/^[A-Z0-9]{2,15}-BRL$/),quantity:z.number().positive(),limitPriceBRL:z.number().positive(),feeRatePercent:z.number().min(0).max(100).optional()})},async(args)=>{try{return output(previewLimitOrder(args));}catch(e){return fail(e);}});
   server.registerTool('trade_status',{description:'Trading is blocked. This tool performs no financial operation.',inputSchema:z.object({})},async()=>{try{tradingUnavailable();}catch(e){return fail(e);}});
   return server;
 });
