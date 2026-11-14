@@ -22,3 +22,15 @@ AN-01 Skill e instruções (este commit); AN-02 serviço de dados OHLCV com orig
 
 ## Gates
 Continuam obrigatórios os testes de integração de cotação do Mercado Bitcoin (HV-03), a proibição de negociação real e autorização explícita para qualquer deploy em main. Não apresentar funcionalidades futuras como ativas.
+
+## Referência complementar: prompt visual sobre bots 24/7 (13/11/2026)
+O conteúdo enviado pelo usuário propõe um agente de trading autônomo 24/7 com passos de especificação, prototipagem, teste, revisão e entrega. Seus pontos aproveitáveis na nossa implementação são: classificador de quatro regimes (tendência calma, lateral, agitado, crash); teste walk-forward fora da amostra; comparação obrigatória após custos com buy-and-hold; checagem pessimista e condições de desligamento; revisão noturna sem alterações autônomas de parâmetros.
+
+### Adaptação deliberada
+A versão do CryptoBridge NÃO executará bots 24/7 nem ordens reais; manter TRADING_DISABLED. Os controles de risco aplicam-se à elegibilidade de estudos e simulações. Qualquer futura execução requer SPEC separada, autorização explícita, identidade, custódia, logs e gates de segurança.
+Um kill switch de "zerar todas as posições" pressupõe execução financeira e foi explicitamente descartado para esta fase. O mecanismo aplicável é **parar simulações e sinalizar indisponibilidade**.
+O uso de Kelly fracionado e do limite ilustrativo de drawdown de 15% não está aprovado: não criar defaults por inferência do conteúdo visual.
+
+### Backlog complementar
+AN-08: regime por séries históricas e testes por janelas; AN-09: walk-forward e testes adversariais de custo, liquidez, latência, vieses e mudança de regime; AN-10: bloqueio fail-closed por dado envelhecido, erro de API e limite configurado pelo usuário; AN-11: revisão periódica de hipóteses e mudanças apenas sob aprovação.
+Critérios de aceite exigem cálculos reproduzíveis com séries e logs de fonte; esses novos motores não estão implementados neste commit.
