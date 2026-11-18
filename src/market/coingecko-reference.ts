@@ -59,7 +59,7 @@ export class CoinGeckoReference {
   if(points.length<51)throw err('INSUFFICIENT_HISTORY','At least 51 daily price observations are required.');
   if(this.now()-lastSource>86400000*2)throw err('STALE_REFERENCE_HISTORY','CoinGecko history is more than two days old.');
   for(let i=1;i<points.length;i++){
-   const gap=(Date.parse(points[i].date)-Date.parse(points[i-1].date))/86400000;
+   const gap=(Date.parse(points[i]!.date)-Date.parse(points[i-1]!.date))/86400000;
    if(gap!==1)throw err('INCOMPLETE_HISTORY','Daily reference history has missing days.');
   }
   return {provider:'coingecko',kind:'AGGREGATED_REFERENCE_HISTORY_NOT_OHLCV',pair,currency:'BRL',fetchedAt:new Date(this.now()).toISOString(),daysRequested:days,points,lastSourceTimestamp:new Date(lastSource).toISOString()};
